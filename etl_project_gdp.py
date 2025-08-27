@@ -13,6 +13,18 @@ table_attribs = ['Country', 'GDP_USD_millions']
 db_name = 'World_Economies.db'
 table_name = 'Countries_by_GDP'
 csv_path = 'Countries_by_GDP.csv'
+log_file='/home/project/etl_project_log.txt'
+inp = 'Init process complete!'
+
+def log_entry(inp): 
+    timestamp_format = '%Y-%h-%d-%H:%M:%S' # Year-Monthname-Day-Hour-Minute-Second 
+    now = datetime.now() # get current timestamp 
+    timestamp = now.strftime(timestamp_format) 
+    with open(log_file,"a") as f: 
+        f.write(timestamp + ',' + inp + '\n') 
+log_entry(inp)
+inp = "ok now on to the next cha cha..."
+log_entry(inp)
 
 
 def extract(url, table_attribs):

@@ -14,7 +14,6 @@ db_name = 'World_Economies.db'
 table_name = 'Countries_by_GDP'
 csv_path = 'Countries_by_GDP.csv'
 log_file='/home/project/etl_project_log.txt'
-inp = 'Init process complete!'
 
 def log_entry(inp): 
     timestamp_format = '%Y-%h-%d-%H:%M:%S' # Year-Monthname-Day-Hour-Minute-Second 
@@ -22,6 +21,8 @@ def log_entry(inp):
     timestamp = now.strftime(timestamp_format) 
     with open(log_file,"a") as f: 
         f.write(timestamp + ',' + inp + '\n') 
+        
+inp = 'Init process complete!'
 log_entry(inp)
 inp = "ok now on to the next cha cha..."
 log_entry(inp)
@@ -45,14 +46,27 @@ def extract(url, table_attribs):
                 df1 = pd.DataFrame(data_dict, index=[0])
                 df = pd.concat([df, df1]. ignore_index=True)
     return df
+inp = "Extraction doneskies"
+log_entry(inp)
+inp = "And AWAAAAAAAAAAAAAAAAAAYYYYYYY WE GO!"
+log_entry(inp)
 
 def transform(df):
     ''' This function converts the GDP information from Currency
     format to float value, transforms the information of GDP from
     USD (Millions) to USD (Billions) rounding to 2 decimal places.
     The function returns the transformed dataframe.'''
-
+    GDP_list = df["GDP_USD_millions"].tolist()
+    GDP_list = [float("".join(x.split(','))) for x in GDP_list]
+    GDP_list = [np.round(x/1000,2) for x in GDP_list]
+    df["GDP_USD_millions"] = GDP_list
+    df=df.rename(columns = {"GDP_USD_millions": "GDP_USD_billions"})
     return df
+inp = "Turnin' millyuns into billyuns siiiirrrrr"
+log_entry(inp)
+inp = "And now I just need mooooooreee"
+log_entry(inp)
+
 
 def load_to_csv(df, csv_path):
     ''' This function saves the final dataframe as a `CSV` file 

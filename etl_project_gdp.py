@@ -49,12 +49,12 @@ def transform(df):
 def load_to_csv(df, csv_path):
     ''' This function saves the final dataframe as a `CSV` file 
     in the provided path. Function returns nothing.'''
-    df.to_csv('/home/project/Countries_by_GDP.csv')
+    df.to_csv(csv_path)
 
 def load_to_db(df, sql_connection, table_name):
     ''' This function saves the final dataframe as a database table
     with the provided name. Function returns nothing.'''
-    df.to_sql('Countries_by_GDP', conn, if_exists='replace', index=False)
+    df.to_sql(table_name, conn, if_exists='replace', index=False)
 
 def run_query(query_statement, sql_connection):
     ''' This function runs the stated query on the database table and
@@ -63,10 +63,22 @@ def run_query(query_statement, sql_connection):
     query_output = pd.read_sql(query_statement, conn)
     print(query_output)
 
-def log_progress(message):
+def log_progress(inp):
     ''' This function logs the mentioned message at a given stage of the code execution to a log file. Function returns nothing'''
-    
+    timestamp_format = '%Y-%h-%d-%H:%M:%S' # Year-Monthname-Day-Hour-Minute-Second 
+    now = datetime.now() # get current timestamp 
+    timestamp = now.strftime(timestamp_format) 
+    with open(log_file,"a") as f: 
+        f.write(timestamp + ' : ' + inp + '\n')
 
 ''' Here, you define the required entities and call the relevant 
 functions in the correct order to complete the project. Note that this
 portion is not inside any function.'''
+
+log_progress('Preliminaries complete. Initiating ETL process.')
+
+df = extract(url, table_attribs)
+
+log_progress('Data extration complete. Initiating Transformation process.')
+
+df = transform(df)

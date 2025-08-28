@@ -82,3 +82,24 @@ df = extract(url, table_attribs)
 log_progress('Data extration complete. Initiating Transformation process.')
 
 df = transform(df)
+
+log_progress('Data transformation complete. Initiating loading process.')
+
+load_to_csv(df, csv_path)
+
+log_progress('Data saved to CSV file.')
+
+conn = sqlite3.connect(db_name)
+
+log_progress('SQL Connection Initiated.')
+
+load_to_db(df, conn, table_name)
+
+log_progress('Data loaded to Database as table. Running the query.')
+
+query_statement= f"SELECT * from {table_name} WHERE GDP_USD_billions >= 100"
+run_query(query_statement, conn)
+
+log_process('Process Complete')
+
+conn.close()

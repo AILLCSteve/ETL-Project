@@ -15,19 +15,6 @@ table_name = 'Countries_by_GDP'
 csv_path = 'Countries_by_GDP.csv'
 log_file='/home/project/etl_project_log.txt'
 
-def log_entry(inp): 
-    timestamp_format = '%Y-%h-%d-%H:%M:%S' # Year-Monthname-Day-Hour-Minute-Second 
-    now = datetime.now() # get current timestamp 
-    timestamp = now.strftime(timestamp_format) 
-    with open(log_file,"a") as f: 
-        f.write(timestamp + ',' + inp + '\n') 
-        
-inp = 'Init process complete!'
-log_entry(inp)
-inp = "ok now on to the next cha cha..."
-log_entry(inp)
-
-
 def extract(url, table_attribs):
     ''' This function extracts the required
     information from the website and saves it to a dataframe. The
@@ -40,16 +27,12 @@ def extract(url, table_attribs):
     for row in rows:
         col = row.find_all('td')
         if len(col)!=0:
-            if col[0].find('a') is not None and '-' not in col[2]
+            if col[0].find('a') is not None and '-' not in col[2]:
                 data_dict = {"Country": col[0].a.contents[0],
                             "GDP_USD_millions": col[2].contents[0]}
                 df1 = pd.DataFrame(data_dict, index=[0])
-                df = pd.concat([df, df1]. ignore_index=True)
+                df = pd.concat([df, df1], ignore_index=True)
     return df
-inp = "Extraction doneskies"
-log_entry(inp)
-inp = "And AWAAAAAAAAAAAAAAAAAAYYYYYYY WE GO!"
-log_entry(inp)
 
 def transform(df):
     ''' This function converts the GDP information from Currency
@@ -62,26 +45,27 @@ def transform(df):
     df["GDP_USD_millions"] = GDP_list
     df=df.rename(columns = {"GDP_USD_millions": "GDP_USD_billions"})
     return df
-inp = "Turnin' millyuns into billyuns siiiirrrrr"
-log_entry(inp)
-inp = "And now I just need mooooooreee"
-log_entry(inp)
-
 
 def load_to_csv(df, csv_path):
     ''' This function saves the final dataframe as a `CSV` file 
     in the provided path. Function returns nothing.'''
+    df.to_csv('/home/project/Countries_by_GDP.csv')
 
 def load_to_db(df, sql_connection, table_name):
     ''' This function saves the final dataframe as a database table
     with the provided name. Function returns nothing.'''
+    df.to_sql('Countries_by_GDP', conn, if_exists='replace', index=False)
 
 def run_query(query_statement, sql_connection):
     ''' This function runs the stated query on the database table and
     prints the output on the terminal. Function returns nothing. '''
+    print(query_statement)
+    query_output = pd.read_sql(query_statement, conn)
+    print(query_output)
 
 def log_progress(message):
     ''' This function logs the mentioned message at a given stage of the code execution to a log file. Function returns nothing'''
+    
 
 ''' Here, you define the required entities and call the relevant 
 functions in the correct order to complete the project. Note that this
